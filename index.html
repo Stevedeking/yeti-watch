@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E8F0F4">
+  <title>Yeti Watch</title>
+  <link rel="stylesheet" href="/src/css/style.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Yeti Watch home">
+        <img src="/src/assets/yeti.png" alt="" class="brand-mascot">
+        <span>Yeti Watch</span>
+      </a>
+    </header>
+
+    <main class="dashboard">
+
+      <section class="market-header">
+        <div class="market-title">
+          <h1>SUI <span>/</span> USDC</h1>
+          <p>See the walls. Track the bluffs.</p>
+        </div>
+
+        <div class="market-price">
+          <span class="price-label">Mid price</span>
+          <strong id="mid-price">---</strong>
+          <span class="price-unit">USDC</span>
+        </div>
+      </section>
+
+      <section class="trust-panel">
+        <div class="trust-content">
+          <span class="trust-label">Pool trust</span>
+          <strong id="trust-score">--%</strong>
+          <p>Large orders pulled before a trade</p>
+        </div>
+
+        <div class="trust-mascot">
+          <img src="/src/assets/yeti.png" alt="Yeti Watch mascot">
+        </div>
+      </section>
+
+      <section class="orderbook-panel">
+        <div class="section-heading">
+          <h2>Order book</h2>
+        </div>
+
+        <div class="book-columns">
+          <span>Price <small>(USDC)</small></span>
+          <span>Amount <small>(SUI)</small></span>
+        </div>
+
+        <div class="book-side asks" id="asks">
+          <p class="book-loading">Loading sell orders...</p>
+        </div>
+
+        <div class="book-spread">
+          <span>Spread</span>
+          <strong id="spread">---</strong>
+        </div>
+
+        <div class="book-side bids" id="bids">
+          <p class="book-loading">Loading buy orders...</p>
+        </div>
+
+        <div class="book-footer">
+          <span>Sell orders</span>
+          <span>Buy orders</span>
+        </div>
+      </section>
+
+      <section class="wall-panel">
+        <div class="section-heading">
+          <h2>Wall monitor</h2>
+          <span id="wall-count" class="wall-count">0 active</span>
+        </div>
+
+        <p class="wall-description">
+          Large orders and what happens to them.
+        </p>
+
+        <div id="wall-list" class="wall-list">
+          <p class="book-loading">
+            Watching for large orders...
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      Built on Sui
+    </footer>
+
+  </div>
+
+  <script type="module" src="/src/js/app.js"></script>
+</body>
+</html>

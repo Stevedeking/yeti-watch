@@ -1,0 +1,580 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #E8F0F4;
+  --surface: #F8FBFC;
+  --ink: #172D40;
+  --muted: #718493;
+  --accent: #F47B35;
+  --buy: #159765;
+  --sell: #D6535B;
+  --line: #D6E1E7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 5%;
+}
+
+/* Header */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.brand-mascot {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+/* Main layout */
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.85fr);
+  gap: 24px 36px;
+  padding-top: 42px;
+}
+
+/* Market heading */
+
+.market-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+}
+
+.market-title h1 {
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 800;
+  letter-spacing: -2.8px;
+  line-height: 1;
+}
+
+.market-title h1 span {
+  color: #9AABB6;
+  font-weight: 500;
+}
+
+.market-title p {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.market-price {
+  text-align: right;
+}
+
+.price-label,
+.price-unit {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.market-price strong {
+  display: block;
+  margin: 5px 0 2px;
+  font-size: clamp(23px, 3vw, 31px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Trust metric */
+
+.trust-panel {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 112px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.trust-content {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 5px;
+}
+
+.trust-label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trust-content strong {
+  color: var(--ink);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trust-content p {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.trust-mascot img {
+  display: block;
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+}
+
+/* Section headings */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+/* Order book */
+
+.orderbook-panel {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: start;
+  min-width: 0;
+  padding: 26px;
+  background: var(--surface);
+  border: 1px solid rgba(214, 225, 231, 0.7);
+  border-radius: 14px;
+}
+
+.book-columns,
+.book-footer,
+.book-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.book-columns {
+  padding: 0 10px 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+}
+
+.book-columns small {
+  font-size: inherit;
+  font-weight: 400;
+}
+
+.book-columns span:last-child,
+.book-row span:last-child {
+  text-align: right;
+}
+
+.book-side {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Individual price rows */
+
+.book-row {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  align-items: center;
+  min-height: 37px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  transition: background 150ms ease;
+}
+
+.book-row span {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.book-row .order-price {
+  font-weight: 600;
+}
+
+.book-row .order-quantity {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.book-row.ask .order-price {
+  color: var(--sell);
+}
+
+.book-row.bid .order-price {
+  color: var(--buy);
+}
+
+/* Depth visualization */
+
+.depth-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.11;
+  transition: width 250ms ease;
+}
+
+.book-row.ask .depth-bar {
+  right: 0;
+  background: var(--sell);
+  border-radius: 5px 0 0 5px;
+}
+
+.book-row.bid .depth-bar {
+  left: 0;
+  background: var(--buy);
+  border-radius: 0 5px 5px 0;
+}
+
+/* Large wall highlighting */
+
+.book-row.wall {
+  background: rgba(244, 123, 53, 0.055);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.book-row.wall .depth-bar {
+  opacity: 0.19;
+}
+
+.book-row.wall:hover {
+  background: rgba(244, 123, 53, 0.10);
+}
+
+/* Keep the wall marker from creating an extra grid row */
+
+.wall-tag {
+  display: none;
+}
+
+/* Spread */
+
+.book-spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0;
+  padding: 15px 12px;
+  background: #EDF3F6;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.book-spread strong {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Loading and footer */
+
+.book-loading {
+  padding: 14px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.book-footer {
+  margin-top: 16px;
+  padding: 12px 10px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.book-footer span:last-child {
+  text-align: right;
+}
+
+/* Wall monitor */
+
+.wall-panel {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: start;
+  min-width: 0;
+  padding: 4px 0 0;
+}
+
+.wall-count {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.wall-description {
+  margin-top: -9px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.wall-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 620px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.wall-list > div,
+.wall-list > article {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.wall-list p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Wall cards */
+
+.wall-list > .wall-card {
+  padding: 16px 0 16px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-left: 2px solid var(--line);
+}
+
+.wall-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.wall-card-heading strong {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wall-active,
+.wall-filled,
+.wall-suspected,
+.wall-mixed {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.wall-active,
+.wall-filled {
+  color: var(--buy);
+}
+
+.wall-suspected {
+  color: var(--sell);
+}
+
+.wall-mixed {
+  color: #B7791F;
+}
+
+.wall-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.wall-details span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Footer */
+
+.footer {
+  padding: 28px 0 12px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Tablet and mobile */
+
+@media (max-width: 760px) {
+  .app {
+    padding: 20px 18px;
+  }
+
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding-top: 30px;
+  }
+
+  .market-header,
+  .trust-panel {
+    grid-column: 1;
+  }
+
+  .orderbook-panel {
+    grid-column: 1;
+    grid-row: auto;
+    padding: 20px 16px;
+  }
+
+  .wall-panel {
+    grid-column: 1;
+    grid-row: auto;
+    padding-top: 4px;
+  }
+
+  .market-title h1 {
+    font-size: 38px;
+  }
+
+  .market-price strong {
+    font-size: 22px;
+  }
+
+  .trust-panel {
+    min-height: 96px;
+  }
+
+  .trust-content strong {
+    font-size: 26px;
+  }
+
+  .trust-mascot img {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 420px) {
+  .app {
+    padding: 18px 14px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand-mascot {
+    width: 32px;
+    height: 32px;
+  }
+
+  .market-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .market-title h1 {
+    font-size: 32px;
+    letter-spacing: -1.8px;
+  }
+
+  .market-title p {
+    max-width: 180px;
+    font-size: 12px;
+  }
+
+  .market-price strong {
+    font-size: 19px;
+  }
+
+  .book-row {
+    min-height: 35px;
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .book-columns {
+    font-size: 10px;
+  }
+
+  .book-spread {
+    padding: 12px 10px;
+  }
+
+  .wall-card-heading {
+    margin-bottom: 9px;
+  }
+
+  .wall-details {
+    gap: 6px;
+  }
+
+  .wall-list {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
