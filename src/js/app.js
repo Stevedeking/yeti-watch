@@ -6,6 +6,7 @@ const MARKET_POLL_MS = 3000, LIFECYCLE_POLL_MS = 10000;
 
 const WALL_MIN = { asks: 5000, bids: 10000 };
 const TRACK_MIN = 250;
+const CANCEL_NO_FILL_DWELL_MS = 10 * 1000;
 
 const API_LIMIT = 100, INITIAL_LOOKBACK_SECONDS = 120, OVERLAP_SECONDS = 30;
 const MAX_SPLIT_DEPTH = 8, REQUEST_TIMEOUT_MS = 15000;
@@ -57,11 +58,11 @@ const setText = (sel, text) => {
   if (el) el.textContent = text;
 };
 
-setText('.trust-label', 'Cancelled, no fill');
-setText('.trust-content p', 'SUI cancelled with no recorded fill (30 min window)');
+setText('.trust-label', 'Wall cancellations, no fill');
+setText('.trust-content p', 'Wall-sized SUI cancelled unfilled after 10 seconds (30 min window)');
 setText(
   '.wall-description',
-  'Big price levels, split into the orders Yeti has seen placed, filled or cancelled.'
+  'Big price levels, split into wall-sized orders Yeti saw placed, filled or cancelled.'
 );
 
 let db = null;
@@ -639,8 +640,8 @@ async function getScanStart(now) {
   }
 
   return Math.max(
-    0,
-    Math.min(now, Number(cp.value)) - OVERLAP_SECONDS
+    now - 600,
+    Math.max(0, Math.min(now, Number(cp.value)) - OVERLAP_SECONDS)
   );
 }
 
@@ -735,7 +736,7 @@ function groupOrders() {
     } else if (o.status === 'Canceled') {
       if (o.filledQuantity > 0) {
         g.cxPartial += o.cancelledQuantity;
-      } else {
+      } else if (qualifiesWallCancelledNoFill(o)) {
         g.cxNoFill += o.cancelledQuantity;
       }
     }
@@ -783,8 +784,6 @@ function addCard(title, status, cls, lines) {
 
 function renderWallMonitor() {
   if (!elements.wallList || !elements.wallCount) return;
-
-  rebuildWallEpisodes();
 
   const groups = groupOrders();
 
@@ -855,7 +854,7 @@ function renderWallMonitor() {
 
     if (g && g.cxNoFill > 0) {
       lines.push(
-        `Cancelled without a fill: ${formatQty(g.cxNoFill)} SUI`
+        `Wall cancelled, no fill: ${formatQty(g.cxNoFill)} SUI`
       );
     }
 
@@ -1072,12 +1071,13 @@ function renderOrderBook(book) {
     );
   }
 
-  // Asks: lowest price first.
+  // Asks: lowest price first, displayed closest to the spread at the bottom.
   renderSide(
     elements.asks,
     [...book.asks]
       .sort((a, b) => a.price - b.price)
-      .slice(0, DEPTH),
+      .slice(0, DEPTH)
+      .reverse(),
     'asks'
   );
 
@@ -1128,6 +1128,7 @@ async function fetchLifecycleData() {
 
     lifecyclePolls++;
 
+    rebuildWallEpisodes();
     renderWallMonitor();
 
     console.log('Yeti Watch tracking update', {
@@ -1206,6 +1207,7 @@ function startYetiWatch() {
   );
 
   initializeStorage().finally(() => {
+    rebuildWallEpisodes();
     renderWallMonitor();
 
     fetchLifecycleData();
@@ -1276,7 +1278,7 @@ function rebuildWallEpisodes() {
     } else if (o.status === 'Canceled') {
       if (num(o.filledQuantity) > 0) {
         episode.cxPartial += num(o.cancelledQuantity);
-      } else {
+      } else if (qualifiesWallCancelledNoFill(o)) {
         episode.cxNoFill += num(o.cancelledQuantity);
       }
     }
@@ -1285,11 +1287,27 @@ function rebuildWallEpisodes() {
   wallEpisodes.clear();
   next.forEach((episode, id) => wallEpisodes.set(id, episode));
 
-  if (db) {
-    dbPutMany('wallEpisodes', [...wallEpisodes.values()]).catch(e =>
-      console.warn('Yeti Watch could not persist wall episodes:', e)
-    );
+  return wallEpisodes;
+}
+
+function qualifiesWallCancelledNoFill(o) {
+  if (
+    o.status !== 'Canceled' ||
+    num(o.filledQuantity) > 0 ||
+    num(o.cancelledQuantity) <= 0
+  ) {
+    return false;
   }
 
-  return wallEpisodes;
+  if (num(o.originalQuantity) < WALL_MIN[o.side]) {
+    return false;
+  }
+
+  const end = normalizeTimestampMs(
+    o.completedAt,
+    normalizeTimestampMs(o.lastUpdatedAt)
+  );
+  const start = normalizeTimestampMs(o.firstSeen, end);
+
+  return end - start >= CANCEL_NO_FILL_DWELL_MS;
 }

@@ -192,6 +192,41 @@ body {
   border-radius: 14px;
 }
 
+.book-sides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.book-column {
+  min-width: 0;
+}
+
+.book-asks {
+  padding-right: 18px;
+  border-right: 1px solid var(--line);
+}
+
+.book-column-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+  margin-bottom: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.book-column-heading small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .book-columns,
 .book-footer,
 .book-row {
@@ -488,6 +523,18 @@ body {
     grid-column: 1;
     grid-row: auto;
     padding: 20px 16px;
+  }
+
+  .book-sides {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .book-asks {
+    padding-right: 0;
+    padding-bottom: 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .wall-panel {
